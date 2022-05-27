@@ -13,8 +13,7 @@ namespace SalesWebMvc.Models
         {
         }
 
-        public DbSet<Seller> Seller
-        { get; set; }
+        public DbSet<Seller> Seller { get; set; }
         public DbSet<SalesRecord> salesRecords { get; set; }
         public DbSet<Department> Department { get; set; }
     }
