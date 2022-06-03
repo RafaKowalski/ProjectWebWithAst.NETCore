@@ -16,7 +16,7 @@ namespace SalesWebMvc.Data
 
         public void Seed()
         {
-            if (_context.Department.Any() || _context.Seller.Any() || _context.salesRecords.Any())
+            if (_context.Department.Any() || _context.Seller.Any() || _context.SalesRecords.Any())
                 return; //DB has been seeded
 
             Department d1 = new Department(1, "Computers");
@@ -66,7 +66,7 @@ namespace SalesWebMvc.Data
 
             _context.Seller.AddRange(s1, s2, s3, s4, s5, s6);
 
-            _context.salesRecords.AddRange(
+            _context.SalesRecords.AddRange(
                 r1, r2, r3, r4, r5, r6, r7, r8, r9, r10,
                 r11, r12, r13, r14, r15, r16, r17, r18, r19, r20,
                 r21, r22, r23, r24, r25, r26, r27, r28, r29, r30
