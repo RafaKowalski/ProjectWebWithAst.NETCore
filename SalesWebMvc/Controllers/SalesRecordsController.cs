@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SalesWebMvc.Models;
 using SalesWebMvc.Services;
 using System;
 using System.Threading.Tasks;
@@ -17,6 +18,14 @@ namespace SalesWebMvc.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(SalesRecord salesRecord)
+        {
+            await _salesRecordService.InsertAsync(salesRecord);
+
+            return View(salesRecord);
         }
 
         public async Task<IActionResult> SimpleSearch(DateTime? minDate, DateTime? maxDate)

@@ -16,6 +16,12 @@ namespace SalesWebMvc.Services
             _context = context;
         }
 
+        public async Task InsertAsync(SalesRecord salesRecord)
+        {
+            _context.Add(salesRecord);
+            _context.SaveChanges();
+        }
+
         public async Task<List<SalesRecord>> FindByDateAsync(DateTime? minDate, DateTime? maxDate)
         {
             var result = from obj in _context.SalesRecords select obj;
