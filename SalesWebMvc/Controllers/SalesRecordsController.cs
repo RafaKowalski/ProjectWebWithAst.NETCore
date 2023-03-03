@@ -3,6 +3,8 @@ using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
 using SalesWebMvc.Services;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SalesWebMvc.Controllers
@@ -25,8 +27,8 @@ namespace SalesWebMvc.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var sellers = await _sellerService.FindAllAsync();
-            var viewModel = new SalesRecordViewModel { Sellers = sellers };
+            List<Seller> sellers = await _sellerService.FindAllAsync();
+            var viewModel = new SalesRecordViewModel(sellers);
 
             return View(viewModel);
         }
