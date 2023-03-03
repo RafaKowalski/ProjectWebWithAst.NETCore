@@ -16,6 +16,11 @@ namespace SalesWebMvc.Services
             _context = context;
         }
 
+        public async Task<List<SalesRecord>> FindAllAsync()
+        {
+            return await _context.SalesRecords.Include(x => x.Seller).ToListAsync();
+        }
+
         public async Task InsertAsync(SalesRecord salesRecord)
         {
             _context.Add(salesRecord);
