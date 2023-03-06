@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SalesWebMvc.Models.Enums;
+using System.Collections.Generic;
 
 namespace SalesWebMvc.Models.ViewModels
 {

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using SalesWebMvc.Models.Enums;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace SalesWebMvc.Models.ViewModels
@@ -7,6 +8,7 @@ namespace SalesWebMvc.Models.ViewModels
     {
         public SalesRecord SalesRecord { get; set; }
         public List<Seller> Sellers { get; set; }
+        public SaleStatus SaleStatus { get; set; }
 
         public SalesRecordViewModel(SalesRecord salesRecord, List<Seller> sellers)
         {
