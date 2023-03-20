@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
 using SalesWebMvc.Services;
+using SalesWebMvc.Services.Exceptions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace SalesWebMvc.Controllers
@@ -41,6 +44,32 @@ namespace SalesWebMvc.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
+
+            var obj = await _salesRecordService.FindByIdAsync(id.Value);
+            if (obj == null)
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
+
+            return View(obj);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _salesRecordService.RemoveAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (IntegrityException e)
+            {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+            }
+        }
+
         public async Task<IActionResult> SimpleSearch(DateTime? minDate, DateTime? maxDate)
         {
             if (!minDate.HasValue)
@@ -67,6 +96,16 @@ namespace SalesWebMvc.Controllers
             ViewData["maxDate"] = maxDate.Value.ToString("yyyy-MM-dd");
             var result = await _salesRecordService.FindByDateGroupingAsync(minDate, maxDate);
             return View(result);
+        }
+
+        private object Error(string message)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+            return View(viewModel);
         }
     }
 }

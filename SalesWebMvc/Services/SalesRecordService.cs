@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using SalesWebMvc.Services.Exceptions;
 
 namespace SalesWebMvc.Services
 {
@@ -21,10 +22,29 @@ namespace SalesWebMvc.Services
             return await _context.SalesRecords.Include(x => x.Seller).ToListAsync();
         }
 
+        public async Task<SalesRecord> FindByIdAsync(int id)
+        {
+            return await _context.SalesRecords.Include(s => s.Seller).FirstOrDefaultAsync(salesRecord => salesRecord.Id == id);
+        }
+
         public async Task InsertAsync(SalesRecord salesRecord)
         {
-            _context.Add(salesRecord);
-            _context.SaveChanges();
+             _context.Add(salesRecord);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveAsync(int id)
+        {
+            try
+            {
+                var salesRecord = await _context.SalesRecords.FindAsync(id);
+                _context.SalesRecords.Remove(salesRecord);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new IntegrityException("Can't delete de Sale Record");
+            }
         }
 
         public async Task<List<SalesRecord>> FindByDateAsync(DateTime? minDate, DateTime? maxDate)
