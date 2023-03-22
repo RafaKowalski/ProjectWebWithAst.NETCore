@@ -47,6 +47,23 @@ namespace SalesWebMvc.Services
             }
         }
 
+        public async Task UpdateAsync(SalesRecord salesRecord)
+        {
+            bool hasAny = await _context.SalesRecords.AnyAsync(x => x.Id == salesRecord.Id);
+            if (!hasAny)
+                throw new NotFoundException("Id not found");
+
+            try
+            {
+                _context.Update(salesRecord);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                throw new DbConcurrencyException(e.Message);
+            }
+        }
+
         public async Task<List<SalesRecord>> FindByDateAsync(DateTime? minDate, DateTime? maxDate)
         {
             var result = from obj in _context.SalesRecords select obj;

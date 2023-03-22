@@ -70,6 +70,49 @@ namespace SalesWebMvc.Controllers
             }
         }
 
+        public async Task<IActionResult> Edit(int id)
+        {
+            if (id == null)
+                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
+
+            var salesRecord = await _salesRecordService.FindByIdAsync(id);
+            if (salesRecord == null)
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
+
+            List<Seller> sellers = await _sellerService.FindAllAsync();
+            SalesRecordViewModel viewModel = new SalesRecordViewModel { SalesRecord= salesRecord, Sellers = sellers };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, SalesRecord salesRecord)
+        {
+            if (!ModelState.IsValid)
+            {
+                var sellers = await _sellerService.FindAllAsync();
+                var viewModel = new SalesRecordViewModel { Sellers = sellers, SalesRecord = salesRecord };
+                return View(viewModel);
+            }
+
+            if (id != salesRecord.Id)
+                return RedirectToAction(nameof(Error), new { message = "Id mismatch" });
+
+            try
+            {
+                await _salesRecordService.UpdateAsync(salesRecord);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (NotFoundException e)
+            {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+            }
+            catch (DbConcurrencyException e)
+            {
+                return RedirectToAction(nameof(Error), new { message = e.Message});
+            }
+        }
+
         public async Task<IActionResult> SimpleSearch(DateTime? minDate, DateTime? maxDate)
         {
             if (!minDate.HasValue)

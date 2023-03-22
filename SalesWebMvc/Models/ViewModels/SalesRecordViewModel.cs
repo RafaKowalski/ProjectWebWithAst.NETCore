@@ -10,6 +10,10 @@ namespace SalesWebMvc.Models.ViewModels
         public List<Seller> Sellers { get; set; }
         public SaleStatus SaleStatus { get; set; }
 
+        public SalesRecordViewModel()
+        {
+        }
+
         public SalesRecordViewModel(SalesRecord salesRecord, List<Seller> sellers)
         {
             SalesRecord = salesRecord;
